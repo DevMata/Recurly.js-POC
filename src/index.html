@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://js.recurly.com/v4/recurly.js"></script>
+    <link href="https://js.recurly.com/v4/recurly.css" rel="stylesheet" type="text/css">
+</head>
+<p>Serve with this command: </p>
+<p>npx browser-sync start --server --files "./*.html" --no-open --no-notify --directory</p>
+<body>
+<form id="my-form">
+    <label>
+        First name
+        <input data-recurly="first_name" type="text">
+    </label>
+    <label>
+        Last name
+        <input data-recurly="last_name" type="text">
+    </label>
+    <label>
+        Address
+        <input data-recurly="address1" type="text">
+    </label>
+    <label>
+        City
+        <input data-recurly="city" type="text">
+    </label>
+    <label>
+        Country
+        <input data-recurly="country" type="text">
+    </label>
+    <label>
+        Postal code
+        <input data-recurly="postal_code" type="text">
+    </label>
+
+
+    <div id="recurly-elements">
+        <!-- Recurly Elements will be attached here -->
+    </div>
+
+    <!-- Recurly.js will update this field automatically -->
+    <input data-recurly="token" name="recurly-token" type="hidden">
+
+    <button>submit</button>
+</form>
+
+<script type="application/javascript">
+    recurly.configure('Recurly public key')
+
+    const elements = recurly.Elements();
+    const cardElement = elements.CardElement();
+    cardElement.attach('#recurly-elements');
+
+    document.querySelector('#my-form').addEventListener('submit', function (event) {
+        const form = this;
+        event.preventDefault();
+        recurly.token(elements, form, function (err, token) {
+            if (err) {
+                console.dir(err)
+            } else {
+                console.dir(token)
+            }
+        });
+    });
+</script>
+</body>
+</html>
